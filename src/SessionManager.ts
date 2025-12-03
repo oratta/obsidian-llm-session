@@ -1,12 +1,11 @@
-import * as pty from 'node-pty';
-import { IPty } from 'node-pty';
 import { App, FileSystemAdapter } from 'obsidian';
 import * as path from 'path';
 import * as fs from 'fs';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { ObsidianLLMSessionSettings } from './Settings';
 
 export class SessionManager {
-    private sessions: Map<string, IPty> = new Map();
+    private sessions: Map<string, ChildProcessWithoutNullStreams> = new Map();
     private app: App;
     private settings: ObsidianLLMSessionSettings;
 
@@ -15,10 +14,10 @@ export class SessionManager {
         this.settings = settings;
     }
 
-    public createSession(directory: string, onData: (data: string) => void): IPty {
+    public createSession(directory: string, onData: (data: string) => void): ChildProcessWithoutNullStreams {
         if (this.sessions.has(directory)) {
             const session = this.sessions.get(directory)!;
-            session.onData(onData);
+            this.attachListeners(session, onData);
             return session;
         }
 
@@ -34,25 +33,40 @@ export class SessionManager {
         this.initializeContext(cwd);
 
         const shell = this.settings.shellPath;
-        const ptyProcess = pty.spawn(shell, [], {
-            name: 'xterm-color',
-            cols: 80,
-            rows: 30,
+        // Use a simple shell invocation. 
+        // Note: Without a PTY, some interactive commands might behave differently.
+        // We might need to force color output for some tools if needed.
+        const subprocess = spawn(shell, [], {
             cwd: cwd,
-            env: process.env
+            env: { ...process.env, TERM: 'xterm-256color' } // Try to trick tools into outputting color
         });
 
-        ptyProcess.onData(onData);
+        this.attachListeners(subprocess, onData);
 
-        ptyProcess.onExit(() => {
+        subprocess.on('exit', () => {
             this.sessions.delete(directory);
+            onData('\r\n[Process exited]\r\n');
         });
 
-        this.sessions.set(directory, ptyProcess);
-        return ptyProcess;
+        this.sessions.set(directory, subprocess);
+        return subprocess;
     }
 
-    public getSession(directory: string): IPty | undefined {
+    private attachListeners(subprocess: ChildProcessWithoutNullStreams, onData: (data: string) => void) {
+        // Remove old listeners to avoid duplication if re-attaching (simplified logic)
+        subprocess.stdout.removeAllListeners('data');
+        subprocess.stderr.removeAllListeners('data');
+
+        subprocess.stdout.on('data', (data) => {
+            onData(data.toString());
+        });
+
+        subprocess.stderr.on('data', (data) => {
+            onData(data.toString());
+        });
+    }
+
+    public getSession(directory: string): ChildProcessWithoutNullStreams | undefined {
         return this.sessions.get(directory);
     }
 
@@ -65,9 +79,15 @@ export class SessionManager {
     }
 
     public resizeSession(directory: string, cols: number, rows: number) {
+        // child_process cannot be resized like a PTY. 
+        // We silently ignore this or could try to set COLUMNS/LINES env vars if we restarted the process, 
+        // but for a running process it's not easily possible without PTY.
+    }
+
+    public writeToSession(directory: string, data: string) {
         const session = this.sessions.get(directory);
         if (session) {
-            session.resize(cols, rows);
+            session.stdin.write(data);
         }
     }
 
@@ -79,7 +99,6 @@ export class SessionManager {
         }
 
         // Copy rule file if it exists in root
-        // TODO: Make rule file path configurable or standard
         const vaultRoot = (this.app.vault.adapter as FileSystemAdapter).getBasePath();
         const ruleFileSource = path.join(vaultRoot, 'llm-rules.md');
         const ruleFileDest = path.join(cwd, 'llm-rules.md');

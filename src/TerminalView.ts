@@ -128,7 +128,7 @@ export class TerminalView extends ItemView {
         });
 
         this.terminal.onData((data) => {
-            session.write(data);
+            this.sessionManager.writeToSession(this.currentDirectory, data);
         });
 
         this.fitAddon.fit();
