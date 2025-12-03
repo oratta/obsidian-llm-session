@@ -33,12 +33,21 @@ export class SessionManager {
         this.initializeContext(cwd);
 
         const shell = this.settings.shellPath;
-        // Use a simple shell invocation. 
-        // Note: Without a PTY, some interactive commands might behave differently.
-        // We might need to force color output for some tools if needed.
-        const subprocess = spawn(shell, [], {
+
+        let command = shell;
+        let args: string[] = [];
+
+        // Use python3 pty module to emulate PTY on macOS/Linux
+        // This is more robust than 'script' and works over pipes
+        if (process.platform === 'darwin' || process.platform === 'linux') {
+            command = 'python3';
+            // import pty; pty.spawn(shell)
+            args = ['-c', `import pty; pty.spawn("${shell}")`];
+        }
+
+        const subprocess = spawn(command, args, {
             cwd: cwd,
-            env: { ...process.env, TERM: 'xterm-256color' } // Try to trick tools into outputting color
+            env: { ...process.env, TERM: 'xterm-256color' }
         });
 
         this.attachListeners(subprocess, onData);
