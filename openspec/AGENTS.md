@@ -15,7 +15,7 @@ ObsidianからClaude CodeなどのLLMセッションを素早く起動するラ�
 ## 主要機能
 
 1. **ランチャーモーダル** - ディレクトリ確認・編集後に起動
-2. **外部ターミナル連携** - iTerm2 / Terminal.app でセッション起動
+2. **外部ターミナル連携** - Terminal.app でセッション起動
 3. **セッション管理** - ウィンドウIDで追跡し、既存セッションにフォーカス
 4. **Enterキー起動** - モーダルでEnterを押すだけで即座に起動
 
@@ -35,14 +35,13 @@ src/
 - **言語:** TypeScript
 - **ビルド:** esbuild
 - **ターミナル制御:** AppleScript (osascript)
-- **対応OS:** macOS (iTerm2 / Terminal.app)
+- **対応OS:** macOS (Terminal.app)
 
 ## 設定項目
 
 | 設定 | 型 | デフォルト | 説明 |
 |------|-----|-----------|------|
 | launchCommand | string | `claude` | 起動するコマンド |
-| terminalApp | `iterm` \| `terminal` | `iterm` | ターミナルアプリ |
 | defaultDirectory | string | (空) | デフォルトディレクトリ |
 
 ## 既知の制限

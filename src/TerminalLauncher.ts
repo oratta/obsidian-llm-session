@@ -1,11 +1,10 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { TerminalApp } from './Settings';
 
 const execAsync = promisify(exec);
 
 // Track active sessions by directory path (store window ID for reliable focus)
-const activeSessions: Map<string, { terminalApp: TerminalApp; windowId: number }> = new Map();
+const activeSessions: Map<string, number> = new Map();
 
 export class TerminalLauncher {
 
@@ -14,14 +13,13 @@ export class TerminalLauncher {
      */
     static async launchOrFocus(
         directory: string,
-        command: string,
-        terminalApp: TerminalApp
+        command: string
     ): Promise<void> {
-        const existingSession = activeSessions.get(directory);
+        const existingWindowId = activeSessions.get(directory);
 
-        if (existingSession) {
+        if (existingWindowId !== undefined) {
             // Try to focus existing session by window ID
-            const focused = await this.focusSession(existingSession.windowId, existingSession.terminalApp);
+            const focused = await this.focusSession(existingWindowId);
             if (focused) {
                 return;
             }
@@ -30,9 +28,9 @@ export class TerminalLauncher {
         }
 
         // Launch new session and get window ID
-        const windowId = await this.launchNew(directory, command, terminalApp);
+        const windowId = await this.launchNew(directory, command);
         if (windowId !== null) {
-            activeSessions.set(directory, { terminalApp, windowId });
+            activeSessions.set(directory, windowId);
         }
     }
 
@@ -41,8 +39,7 @@ export class TerminalLauncher {
      */
     private static async launchNew(
         directory: string,
-        command: string,
-        terminalApp: TerminalApp
+        command: string
     ): Promise<number | null> {
         if (process.platform !== 'darwin') {
             throw new Error('Currently only macOS is supported');
@@ -51,30 +48,14 @@ export class TerminalLauncher {
         const escapedDir = directory.replace(/"/g, '\\"');
         const escapedCmd = command.replace(/"/g, '\\"');
 
-        let script: string;
-
-        if (terminalApp === 'iterm') {
-            // iTerm2: Create window and return its ID
-            script = `
-                tell application "iTerm"
-                    activate
-                    set newWindow to (create window with default profile)
-                    tell current session of newWindow
-                        write text "cd \\"${escapedDir}\\" && ${escapedCmd}"
-                    end tell
-                    return id of newWindow
-                end tell
-            `;
-        } else {
-            // Terminal.app: Create window and return its ID
-            script = `
-                tell application "Terminal"
-                    activate
-                    do script "cd \\"${escapedDir}\\" && ${escapedCmd}"
-                    return id of front window
-                end tell
-            `;
-        }
+        // Terminal.app: Create window and return its ID
+        const script = `
+            tell application "Terminal"
+                activate
+                do script "cd \\"${escapedDir}\\" && ${escapedCmd}"
+                return id of front window
+            end tell
+        `;
 
         try {
             const result = await execAsync(`osascript -e '${script.replace(/'/g, "'\"'\"'")}'`);
@@ -93,10 +74,7 @@ export class TerminalLauncher {
      * Try to focus an existing terminal session by window ID
      * Returns true if successful, false if the session no longer exists
      */
-    private static async focusSession(
-        windowId: number,
-        terminalApp: TerminalApp
-    ): Promise<boolean> {
+    private static async focusSession(windowId: number): Promise<boolean> {
         if (process.platform !== 'darwin') {
             return false;
         }
@@ -104,49 +82,25 @@ export class TerminalLauncher {
         console.log('ObsidianLLM: Trying to focus window ID:', windowId);
 
         try {
-            let script: string;
-
-            if (terminalApp === 'iterm') {
-                // iTerm2: Find and focus window by ID
-                script = `
-                    tell application "iTerm"
-                        set targetWindow to missing value
-                        repeat with w in windows
-                            if id of w is ${windowId} then
-                                set targetWindow to w
-                                exit repeat
-                            end if
-                        end repeat
-                        if targetWindow is not missing value then
-                            select targetWindow
-                            activate
-                            return true
-                        else
-                            return false
+            // Terminal.app: Find and focus window by ID
+            const script = `
+                tell application "Terminal"
+                    set targetWindow to missing value
+                    repeat with w in windows
+                        if id of w is ${windowId} then
+                            set targetWindow to w
+                            exit repeat
                         end if
-                    end tell
-                `;
-            } else {
-                // Terminal.app: Find and focus window by ID
-                script = `
-                    tell application "Terminal"
-                        set targetWindow to missing value
-                        repeat with w in windows
-                            if id of w is ${windowId} then
-                                set targetWindow to w
-                                exit repeat
-                            end if
-                        end repeat
-                        if targetWindow is not missing value then
-                            set frontmost of targetWindow to true
-                            activate
-                            return true
-                        else
-                            return false
-                        end if
-                    end tell
-                `;
-            }
+                    end repeat
+                    if targetWindow is not missing value then
+                        set frontmost of targetWindow to true
+                        activate
+                        return true
+                    else
+                        return false
+                    end if
+                end tell
+            `;
 
             const result = await execAsync(`osascript -e '${script.replace(/'/g, "'\"'\"'")}'`);
             const success = result.stdout.trim() === 'true';

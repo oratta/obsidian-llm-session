@@ -1,17 +1,13 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import ObsidianLLMSessionPlugin from '../main';
 
-export type TerminalApp = 'iterm' | 'terminal';
-
 export interface ObsidianLLMSessionSettings {
 	launchCommand: string;
-	terminalApp: TerminalApp;
 	defaultDirectory: string;
 }
 
 export const DEFAULT_SETTINGS: ObsidianLLMSessionSettings = {
 	launchCommand: 'claude',
-	terminalApp: 'iterm',
 	defaultDirectory: ''
 }
 
@@ -38,18 +34,6 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.launchCommand)
 				.onChange(async (value) => {
 					this.plugin.settings.launchCommand = value;
-					await this.plugin.saveSettings();
-				}));
-
-		new Setting(containerEl)
-			.setName('Terminal Application')
-			.setDesc('Which terminal app to use')
-			.addDropdown(dropdown => dropdown
-				.addOption('iterm', 'iTerm2')
-				.addOption('terminal', 'Terminal.app')
-				.setValue(this.plugin.settings.terminalApp)
-				.onChange(async (value: TerminalApp) => {
-					this.plugin.settings.terminalApp = value;
 					await this.plugin.saveSettings();
 				}));
 

@@ -82,8 +82,7 @@ export class LaunchModal extends Modal {
         try {
             await TerminalLauncher.launchOrFocus(
                 fullPath,
-                this.settings.launchCommand,
-                this.settings.terminalApp
+                this.settings.launchCommand
             );
             new Notice(`LLM Session launched in ${this.directory || 'vault root'}`);
             this.close();
