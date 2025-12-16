@@ -33,16 +33,28 @@ export class LaunchModal extends Modal {
         new Setting(contentEl)
             .setName('Directory')
             .setDesc('Directory to launch the session in (relative to vault root)')
-            .addText(text => text
-                .setValue(this.directory)
-                .onChange((value) => {
-                    this.directory = value;
-                }));
+            .addText(text => {
+                text.setValue(this.directory)
+                    .onChange((value) => {
+                        this.directory = value;
+                    });
+                // Focus the text input and handle Enter key
+                text.inputEl.addEventListener('keydown', (e: KeyboardEvent) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.launch();
+                    }
+                });
+            });
 
         // Command preview
         const commandPreview = contentEl.createEl('div', { cls: 'llm-session-command-preview' });
         commandPreview.createEl('span', { text: 'Command: ' });
         commandPreview.createEl('code', { text: this.settings.launchCommand });
+
+        // Hint for Enter key
+        const hint = contentEl.createEl('div', { cls: 'llm-session-hint' });
+        hint.createEl('span', { text: 'Press Enter to launch' });
 
         // Buttons
         const buttonContainer = contentEl.createEl('div', { cls: 'llm-session-button-container' });
@@ -55,6 +67,13 @@ export class LaunchModal extends Modal {
 
         const cancelButton = buttonContainer.createEl('button', { text: 'Cancel' });
         cancelButton.addEventListener('click', () => this.close());
+
+        // Handle Enter key on the modal itself
+        this.scope.register([], 'Enter', (e: KeyboardEvent) => {
+            e.preventDefault();
+            this.launch();
+            return false;
+        });
     }
 
     private async launch() {

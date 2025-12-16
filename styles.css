@@ -30,3 +30,9 @@
 .llm-session-button-container button {
     padding: 8px 16px;
 }
+
+.llm-session-hint {
+    color: var(--text-muted);
+    font-size: 0.85em;
+    margin-bottom: 10px;
+}
