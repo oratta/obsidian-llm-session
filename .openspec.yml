@@ -1,0 +1,6 @@
+version: 1
+changes_directory: openspec
+language: ja
+integrations:
+  claude: true
+  serena: true
