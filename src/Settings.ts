@@ -1,16 +1,18 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import ObsidianLLMSessionPlugin from '../main';
 
+export type TerminalApp = 'iterm' | 'terminal';
+
 export interface ObsidianLLMSessionSettings {
-	shellPath: string;
-	rootDirectory: string;
-	excludeDirectories: string[];
+	launchCommand: string;
+	terminalApp: TerminalApp;
+	defaultDirectory: string;
 }
 
 export const DEFAULT_SETTINGS: ObsidianLLMSessionSettings = {
-	shellPath: '/bin/zsh',
-	rootDirectory: '',
-	excludeDirectories: ['node_modules', '.git', '.obsidian']
+	launchCommand: 'claude',
+	terminalApp: 'iterm',
+	defaultDirectory: ''
 }
 
 export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
@@ -26,39 +28,40 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Obsidian LLM Session Settings'});
+		containerEl.createEl('h2', {text: 'LLM Session Launcher Settings'});
 
 		new Setting(containerEl)
-			.setName('Shell Path')
-			.setDesc('Path to the shell executable (e.g. /bin/zsh, /bin/bash)')
+			.setName('Launch Command')
+			.setDesc('Command to run in terminal (e.g., claude, aider, cursor)')
 			.addText(text => text
-				.setPlaceholder('/bin/zsh')
-				.setValue(this.plugin.settings.shellPath)
+				.setPlaceholder('claude')
+				.setValue(this.plugin.settings.launchCommand)
 				.onChange(async (value) => {
-					this.plugin.settings.shellPath = value;
+					this.plugin.settings.launchCommand = value;
 					await this.plugin.saveSettings();
 				}));
 
-        new Setting(containerEl)
-			.setName('Root Directory')
-			.setDesc('Root directory for the plugin to operate in (relative to vault root). Leave empty for vault root.')
-			.addText(text => text
-				.setPlaceholder('')
-				.setValue(this.plugin.settings.rootDirectory)
-				.onChange(async (value) => {
-					this.plugin.settings.rootDirectory = value;
+		new Setting(containerEl)
+			.setName('Terminal Application')
+			.setDesc('Which terminal app to use')
+			.addDropdown(dropdown => dropdown
+				.addOption('iterm', 'iTerm2')
+				.addOption('terminal', 'Terminal.app')
+				.setValue(this.plugin.settings.terminalApp)
+				.onChange(async (value: TerminalApp) => {
+					this.plugin.settings.terminalApp = value;
 					await this.plugin.saveSettings();
 				}));
-                
-        new Setting(containerEl)
-            .setName('Exclude Directories')
-            .setDesc('Comma separated list of directories to exclude from context')
-            .addText(text => text
-                .setPlaceholder('node_modules, .git')
-                .setValue(this.plugin.settings.excludeDirectories.join(', '))
-                .onChange(async (value) => {
-                    this.plugin.settings.excludeDirectories = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-                    await this.plugin.saveSettings();
-                }));
+
+		new Setting(containerEl)
+			.setName('Default Directory')
+			.setDesc('Default directory for new sessions (relative to vault root). Leave empty to use current file\'s directory.')
+			.addText(text => text
+				.setPlaceholder('')
+				.setValue(this.plugin.settings.defaultDirectory)
+				.onChange(async (value) => {
+					this.plugin.settings.defaultDirectory = value;
+					await this.plugin.saveSettings();
+				}));
 	}
 }

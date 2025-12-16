@@ -1,11 +1,10 @@
 {
 	"id": "obsidian-llm-session",
-	"name": "Obsidian LLM Session",
-	"version": "1.0.0",
+	"name": "LLM Session Launcher",
+	"version": "0.2.0",
 	"minAppVersion": "0.15.0",
-	"description": "Chat with LLM (Claude Code) with project context awareness.",
+	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal from Obsidian.",
 	"author": "Oratta",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+	"authorUrl": "",
+	"isDesktopOnly": true
 }

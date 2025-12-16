@@ -1,15 +1,15 @@
 {
 	"name": "obsidian-llm-session",
-	"version": "1.0.0",
-	"description": "Chat with LLM (Claude Code) with project context awareness.",
+	"version": "0.2.0",
+	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal from Obsidian.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": ["obsidian", "llm", "claude", "terminal"],
+	"author": "Oratta",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
@@ -20,9 +20,5 @@
 		"obsidian": "latest",
 		"tslib": "2.4.0",
 		"typescript": "4.7.4"
-	},
-	"dependencies": {
-		"xterm": "^5.3.0",
-		"xterm-addon-fit": "^0.8.0"
 	}
 }
