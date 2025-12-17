@@ -1,4 +1,4 @@
-import { Plugin, TFile } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { ObsidianLLMSessionSettings, ObsidianLLMSessionSettingTab, DEFAULT_SETTINGS } from './src/Settings';
 import { LaunchModal } from './src/LaunchModal';
 import { TerminalLauncher } from './src/TerminalLauncher';
@@ -11,14 +11,14 @@ export default class ObsidianLLMSessionPlugin extends Plugin {
 		await this.loadSettings();
 
 		// Add ribbon icon
-		this.addRibbonIcon('terminal', 'Launch LLM Session', () => {
+		this.addRibbonIcon('terminal', 'Launch LLM session', () => {
 			this.openLaunchModal();
 		});
 
 		// Add command
 		this.addCommand({
 			id: 'launch-llm-session',
-			name: 'Launch LLM Session',
+			name: 'Launch LLM session',
 			callback: () => {
 				this.openLaunchModal();
 			}

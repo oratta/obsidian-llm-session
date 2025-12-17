@@ -60,7 +60,7 @@ export class TerminalLauncher {
         try {
             const result = await execAsync(`osascript -e '${script.replace(/'/g, "'\"'\"'")}'`);
             const windowId = parseInt(result.stdout.trim(), 10);
-            console.log('ObsidianLLM: Created window with ID:', windowId);
+            console.debug('ObsidianLLM: Created window with ID:', windowId);
             return isNaN(windowId) ? null : windowId;
         } catch (error) {
             console.error('ObsidianLLM: Failed to create window:', error);
@@ -79,7 +79,7 @@ export class TerminalLauncher {
             return false;
         }
 
-        console.log('ObsidianLLM: Trying to focus window ID:', windowId);
+        console.debug('ObsidianLLM: Trying to focus window ID:', windowId);
 
         try {
             // Terminal.app: Find and focus window by ID
@@ -104,7 +104,7 @@ export class TerminalLauncher {
 
             const result = await execAsync(`osascript -e '${script.replace(/'/g, "'\"'\"'")}'`);
             const success = result.stdout.trim() === 'true';
-            console.log('ObsidianLLM: Focus result:', success);
+            console.debug('ObsidianLLM: Focus result:', success);
             return success;
         } catch (error) {
             console.error('ObsidianLLM: Focus error:', error);

@@ -18,7 +18,7 @@ export class LaunchModal extends Modal {
     onOpen() {
         const { contentEl } = this;
 
-        contentEl.createEl('h2', { text: 'Launch LLM Session' });
+        contentEl.createEl('h2', { text: 'Launch LLM session' });
 
         // Show if session already exists
         const fullPath = path.join(this.vaultRoot, this.directory);
@@ -42,7 +42,7 @@ export class LaunchModal extends Modal {
                 text.inputEl.addEventListener('keydown', (e: KeyboardEvent) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        this.launch();
+                        void this.launch();
                     }
                 });
             });
@@ -54,16 +54,16 @@ export class LaunchModal extends Modal {
 
         // Hint for Enter key
         const hint = contentEl.createEl('div', { cls: 'llm-session-hint' });
-        hint.createEl('span', { text: 'Press Enter to launch' });
+        hint.createEl('span', { text: 'Press enter to launch' });
 
         // Buttons
         const buttonContainer = contentEl.createEl('div', { cls: 'llm-session-button-container' });
 
         const launchButton = buttonContainer.createEl('button', {
-            text: 'Launch Session',
+            text: 'Launch session',
             cls: 'mod-cta'
         });
-        launchButton.addEventListener('click', () => this.launch());
+        launchButton.addEventListener('click', () => { void this.launch(); });
 
         const cancelButton = buttonContainer.createEl('button', { text: 'Cancel' });
         cancelButton.addEventListener('click', () => this.close());
@@ -71,7 +71,7 @@ export class LaunchModal extends Modal {
         // Handle Enter key on the modal itself
         this.scope.register([], 'Enter', (e: KeyboardEvent) => {
             e.preventDefault();
-            this.launch();
+            void this.launch();
             return false;
         });
     }

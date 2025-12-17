@@ -1,7 +1,7 @@
 {
 	"id": "llm-session-launcher",
 	"name": "LLM Session Launcher",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"minAppVersion": "0.15.0",
 	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal.",
 	"author": "Oratta",

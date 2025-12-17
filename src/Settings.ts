@@ -24,10 +24,12 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'LLM Session Launcher Settings'});
+		new Setting(containerEl)
+			.setName('LLM session launcher')
+			.setHeading();
 
 		new Setting(containerEl)
-			.setName('Launch Command')
+			.setName('Launch command')
 			.setDesc('Command to run in terminal (e.g., claude, aider, cursor)')
 			.addText(text => text
 				.setPlaceholder('claude')
@@ -38,7 +40,7 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 				}));
 
 		new Setting(containerEl)
-			.setName('Default Directory')
+			.setName('Default directory')
 			.setDesc('Default directory for new sessions (relative to vault root). Leave empty to use current file\'s directory.')
 			.addText(text => text
 				.setPlaceholder('')
