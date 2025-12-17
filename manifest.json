@@ -5,6 +5,6 @@
 	"minAppVersion": "0.15.0",
 	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal from Obsidian.",
 	"author": "Oratta",
-	"authorUrl": "",
+	"authorUrl": "https://github.com/oratta",
 	"isDesktopOnly": true
 }
