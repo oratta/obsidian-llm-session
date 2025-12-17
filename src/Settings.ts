@@ -25,10 +25,6 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName('LLM session launcher')
-			.setHeading();
-
-		new Setting(containerEl)
 			.setName('Launch command')
 			.setDesc('Command to run in terminal (e.g., claude, aider, cursor)')
 			.addText(text => text
