@@ -26,12 +26,12 @@
 #### 2.1 初回リリースの準備
 - [x] コードが最新であることを確認
 - [x] `npm run build`でビルド成功を確認
-- [x] バージョン番号を確認（0.2.0で公開）
+- [x] バージョン番号を確認（0.2.1で公開）
 
 #### 2.2 GitHubリリースの作成
 - [x] リポジトリを公開（public）にする
-- [x] タグを作成: `git tag -a 0.2.0 -m "0.2.0"`
-- [x] タグをプッシュ: `git push origin 0.2.0`
+- [x] タグを作成: `git tag -a 0.2.1 -m "0.2.1"`
+- [x] タグをプッシュ: `git push origin 0.2.1`
 - [x] GitHub Actionsでリリースが作成されることを確認
 - [x] ドラフトリリースを公開
 
@@ -42,10 +42,10 @@
 - [x] `community-plugins.json`にエントリを追加:
   ```json
   {
-    "id": "obsidian-llm-session",
+    "id": "llm-session-launcher",
     "name": "LLM Session Launcher",
     "author": "Oratta",
-    "description": "Launch LLM sessions (Claude Code, etc.) in external terminal from Obsidian.",
+    "description": "Launch LLM sessions (Claude Code, etc.) in external terminal.",
     "repo": "oratta/obsidian-llm-session"
   }
   ```
@@ -55,8 +55,8 @@
 **PR**: https://github.com/obsidianmd/obsidian-releases/pull/8991
 
 #### 3.2 レビュー対応
-- [ ] ボット検証（Validation）結果を確認
-- [ ] "Ready for review"ラベルが付くまで修正
+- [x] ボット検証（Validation）結果を確認
+- [x] "Ready for review"ラベルが付くまで修正
 - [ ] レビューコメントへの対応（必要に応じて）
 
 ## 依存関係
@@ -76,10 +76,11 @@ Phase 1.3 ─┘
 ### Obsidianプラグインガイドライン
 
 1. **プラグイン名**: "Obsidian"を含めない ✅
-2. **コマンド名**: プラグインIDをプレフィックスにしない（Obsidianが自動追加）
-3. **説明文**: 250文字以内、絵文字不可
-4. **ネットワーク**: 使用する場合は開示必須（本プラグインは不使用）
-5. **Vault外アクセス**: 外部ターミナル起動について開示が必要
+2. **プラグインID**: "Obsidian"を含めない ✅ (llm-session-launcher)
+3. **コマンド名**: プラグインIDをプレフィックスにしない（Obsidianが自動追加）
+4. **説明文**: 250文字以内、絵文字不可、"Obsidian"を含めない ✅
+5. **ネットワーク**: 使用する場合は開示必須（本プラグインは不使用）
+6. **Vault外アクセス**: 外部ターミナル起動について開示が必要
 
 ### 外部ターミナル起動の開示
 
