@@ -38,8 +38,8 @@
 ### Phase 3: コミュニティプラグイン申請
 
 #### 3.1 obsidian-releasesへのPR作成
-- [ ] `obsidianmd/obsidian-releases`リポジトリをフォーク
-- [ ] `community-plugins.json`にエントリを追加:
+- [x] `obsidianmd/obsidian-releases`リポジトリをフォーク
+- [x] `community-plugins.json`にエントリを追加:
   ```json
   {
     "id": "obsidian-llm-session",
@@ -49,8 +49,10 @@
     "repo": "oratta/obsidian-llm-session"
   }
   ```
-- [ ] PRを作成（タイトル: "Add plugin: LLM Session Launcher"）
-- [ ] Community Pluginテンプレートに従ってPR説明を記入
+- [x] PRを作成（タイトル: "Add plugin: LLM Session Launcher"）
+- [x] Community Pluginテンプレートに従ってPR説明を記入
+
+**PR**: https://github.com/obsidianmd/obsidian-releases/pull/8991
 
 #### 3.2 レビュー対応
 - [ ] ボット検証（Validation）結果を確認
