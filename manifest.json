@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-llm-session",
+	"id": "llm-session-launcher",
 	"name": "LLM Session Launcher",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"minAppVersion": "0.15.0",
-	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal from Obsidian.",
+	"description": "Launch LLM sessions (Claude Code, etc.) in external terminal.",
 	"author": "Oratta",
 	"authorUrl": "https://github.com/oratta",
 	"isDesktopOnly": true
