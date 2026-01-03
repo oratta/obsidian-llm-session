@@ -1,0 +1,3 @@
+[submodule "plugins/obsidian-llm-session-rules"]
+	path = plugins/obsidian-llm-session-rules
+	url = https://github.com/oratta/obsidian-llm-session-plugin.git
