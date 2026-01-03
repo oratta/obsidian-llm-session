@@ -23,3 +23,6 @@ data.json
 
 # Serena MCP
 .serena/
+
+# Local contexts (symlink to Obsidian Vault)
+docs/contexts
