@@ -53,6 +53,17 @@ npm run dev       # Development mode (watch)
 npm run build     # Production build
 ```
 
+## Disclaimer
+
+This plugin was created primarily for my personal use. I'm sharing it with the community in case others find it useful for similar workflows.
+
+Please note:
+- **No warranty**: This plugin is provided "as is" without any guarantees
+- **Limited support**: I may not be able to respond to feature requests or bug reports
+- **Use at your own risk**: I cannot take responsibility for any issues that may arise from using this plugin
+
+If this plugin happens to work for your use case, that's great! But please understand that I cannot commit to maintaining it for everyone's needs.
+
 ## License
 
 MIT

@@ -1,8 +1,9 @@
+import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 import obsidianmd from "eslint-plugin-obsidianmd";
 import globals from "globals";
 
-export default tseslint.config(
+export default defineConfig([
   {
     ignores: ["node_modules/**", "main.js", "*.mjs", "eslint.config.js"],
   },
@@ -19,7 +20,10 @@ export default tseslint.config(
     },
     rules: {
       // Acronyms like LLM should be allowed in uppercase
-      "obsidianmd/ui/sentence-case": "off",
+      "obsidianmd/ui/sentence-case": ["error", {
+        acronyms: ["LLM"],
+        brands: ["Claude", "Aider", "Cursor"],
+      }],
       // Allow any for loadData() return type
       "@typescript-eslint/no-unsafe-assignment": "warn",
       "@typescript-eslint/no-unsafe-member-access": "warn",
@@ -32,4 +36,4 @@ export default tseslint.config(
       "depend/ban-dependencies": "off",
     },
   }
-);
+]);

@@ -26,9 +26,9 @@ export class ObsidianLLMSessionSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Launch command')
-			.setDesc('Command to run in terminal (e.g., claude, aider, cursor)')
+			.setDesc('Command to run in terminal')
 			.addText(text => text
-				.setPlaceholder('claude')
+				.setPlaceholder('Enter command')
 				.setValue(this.plugin.settings.launchCommand)
 				.onChange(async (value) => {
 					this.plugin.settings.launchCommand = value;
